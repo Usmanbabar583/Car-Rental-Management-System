@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Car {
+private:
+    string brand;
+    string model;
+    bool rented;
+
+public:
+    Car(string brand, string model) : brand(brand), model(model), rented(false) {}
+
+    string getBrand() const {
+        return brand;
+    }
+
+    string getModel() const {
+        return model;
+    }
+
+    bool isRented() const {
+        return rented;
+    }
+
+    void rent() {
+        rented = true;
+    }
+
+    void returnCar() {
+        rented = false;
+    }
+};
+
+class CarRentalSystem {
+private:
+    vector<Car> cars;
+
+public:
+    void addCar(const Car& car) {
+        cars.push_back(car);
+    }
+
+    void rentCar(int carIndex) {
+        if (carIndex >= 0 && carIndex < cars.size()) {
+            if (!cars[carIndex].isRented()) {
+                cars[carIndex].rent();
+                cout << "Car rented successfully." << endl;
+            } else {
+                cout << "Car is already rented." << endl;
+            }
+        } else {
+            cout << "Invalid car index." << endl;
+        }
+    }
+
+    void returnCar(int carIndex) {
+        if (carIndex >= 0 && carIndex < cars.size()) {
+            if (cars[carIndex].isRented()) {
+                cars[carIndex].returnCar();
+                cout << "Car returned successfully." << endl;
+            } else {
+                cout << "Car is not rented." << endl;
+            }
+        } else {
+            cout << "Invalid car index." << endl;
+        }
+    }
+
+    void displayAvailableCars() const {
+        cout << "Available Cars:" << endl;
+        for (size_t i = 0; i < cars.size(); ++i) {
+            if (!cars[i].isRented()) {
+                cout << i << ". " << cars[i].getBrand() << " " << cars[i].getModel() << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    CarRentalSystem carRental;
+
+    carRental.addCar(Car("Toyota", "Camry"));
+    carRental.addCar(Car("Honda", "Accord"));
+    carRental.addCar(Car("Ford", "Mustang"));
+
+    int choice;
+    while (true) {
+        cout << "Car Rental System" << endl;
+        cout << "1. Rent a Car" << endl;
+        cout << "2. Return a Car" << endl;
+        cout << "3. Display Available Cars" << endl;
+        cout << "4. Exit" << endl;
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                int carIndex;
+                carRental.displayAvailableCars();
+                cout << "Enter the index of the car you want to rent: ";
+                cin >> carIndex;
+                carRental.rentCar(carIndex);
+                break;
+            }
+            case 2: {
+                int carIndex;
+                carRental.displayAvailableCars();
+                cout << "Enter the index of the car you want to return: ";
+                cin >> carIndex;
+                carRental.returnCar(carIndex);
+                break;
+            }
+            case 3:
+                carRental.displayAvailableCars();
+                break;
+            case 4:
+                cout << "Exiting the program. Goodbye!" << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
